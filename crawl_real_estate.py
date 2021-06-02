@@ -12,10 +12,12 @@ cols = ['İlanNo', 'Lokasyon', 'm²(Brüt)', 'm²(Net)', 'OdaSayısı',
         'Balkon', 'Eşyalı', 'KullanımDurumu', 'Siteİçerisinde', 'Aidat(TL)',
         'Depozito(TL)', 'Kimden', 'Fiyat']
 
+#Kullanılacak olan veri setinin çekileceği URl'lerin
 url_sahibinden_pages = 'https://www.sahibinden.com/kiralik-daire/istanbul?pagingOffset='
 house_url = 'https://www.sahibinden.com'
-#house_links = []
+house_links = []
 
+#Veri çekilen sitenin robot aktivitelere karşı korunmuş olmasının aşılabilmesi için kullanılan user agent yöntemi
 user_agent_list = [
 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
@@ -24,6 +26,7 @@ user_agent_list = [
 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
 ]
 
+#Proxy kullanarak site erişiminin kesilmesinin çözülmesi
 def get_free_proxies():
     url = "https://free-proxy-list.net/"
     # get the HTTP response and construct soup object
@@ -39,6 +42,7 @@ def get_free_proxies():
         except IndexError:
             continue
     return proxies
+
 from fake_useragent import UserAgent
 ua = UserAgent()
 def get_session(proxies):
@@ -60,7 +64,8 @@ def get_session(proxies):
     session.headers = headers
     return session
 
-'''for i in range(2, 20):
+
+for i in range(2, 20):
     print(f'page : {i}')
     s = get_session(get_free_proxies())
     res = s.get("https://www.sahibinden.com/kiralik-daire/istanbul?pagingOffset="+str(i*20))
@@ -75,7 +80,7 @@ def get_session(proxies):
     for item in href_links:
         house_links.append(house_url + item['href'])
         print(house_url + item['href'])
-'''
+
 
 def readFile(fileName):
     fileObj = open(fileName, "r")  # opens the file in read mode
@@ -83,6 +88,7 @@ def readFile(fileName):
     fileObj.close()
     return words
 
+#elde edilen ev linkleri açılarak belirleyici olabilecek özelliklerin veri setine eklenmesi
 house_links = readFile("links.txt")
 df = pd.DataFrame(columns=cols, index=np.arange(0, len(house_links)))
 for index, house in enumerate(house_links):
@@ -119,6 +125,3 @@ for index, house in enumerate(house_links):
 
 print(df.head(100))
 df.to_csv('house_data_with_label2.csv', index=False)
-
-# get phone prices
-# price big length-6
