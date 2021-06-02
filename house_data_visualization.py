@@ -3,12 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-DATA_PATH = "house_data_with_label.csv"
-df = pd.read_csv(DATA_PATH)
-
-print(df.head())
-print(df.describe())
-
 
 # Veri kümesinin özelliklerinin daha anlamlı olması için kategorize edilmelidir.
 '''cols = df.select_dtypes('object').columns
